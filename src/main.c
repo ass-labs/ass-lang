@@ -164,8 +164,9 @@ int main()
     state_print(&root, 0);
 
     println("");
-    char const *samples[] = {"in", "ino",  "inputu", "test", "il",
-                             "if", "else", "true",   "True"};
+    char const *samples[] = {"in",  "ino",  "inputu", "test", "il",
+                             "if",  "else", "true",   "True", "AND",
+                             "and", "Not",  "NOT"};
     for (size_t i = 0; i < (sizeof(samples) / sizeof(samples[0])); ++i)
     {
         char const *sample = samples[i];
