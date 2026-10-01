@@ -5,10 +5,8 @@
 
 #define loop while (1)
 
-[[noreturn]]
-void terminate(uint32_t code, char const *fmt, ...);
+_Noreturn void terminate(uint32_t code, char const *fmt, ...);
 
-[[noreturn]]
-void panic(char const *fmt, ...);
+_Noreturn void panic(char const *fmt, ...);
 
 #endif

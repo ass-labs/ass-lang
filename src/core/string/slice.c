@@ -45,7 +45,7 @@ vec(string_slice_t) string_slice_split(string_slice_t slice, char const *delim)
 void string_slice_to_string(string_slice_t *slice, string_t *out)
 {
     string_init(out);
-    out->data = strndup(slice->data, slice->n + 1);
+    out->data = strndup(slice->data, slice->n);
     out->data[slice->n] = '\0';
     out->len = out->cap = slice->n;
 }

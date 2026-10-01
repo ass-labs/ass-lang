@@ -3,6 +3,11 @@
 
 #include "core/collection/vec.h"
 
+#include <stdlib.h>
+#include <string.h>
+
+char *strndup(const char *s, size_t n);
+
 declare_vec(char);
 
 typedef vec(char) string_t;
