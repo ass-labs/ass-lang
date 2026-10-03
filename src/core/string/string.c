@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "core/collection/slice.h"
 #include "core/collection/vec.h"
 #include "core/string/string.h"
 #include "utils/control.h"
@@ -99,6 +100,17 @@ void string_replace(string_t *str, char const *old, char const *new)
 void string_replace_all(string_t *str, char const *old, char const *new)
 {
     string_replacen(str, old, new, SIZE_MAX);
+}
+
+bool string_starts_with(string_t *str, char const *pref)
+{
+    return strncmp(str->data, pref, strlen(pref)) != 0;
+}
+
+bool string_ends_with(string_t *str, char const *suf)
+{
+    size_t suf_len = strlen(suf);
+    return strncmp(str->data + (str->len - suf_len), suf, suf_len) != 0;
 }
 
 void string_assign(string_t *str, char const *s)

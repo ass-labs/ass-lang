@@ -39,7 +39,7 @@ ifeq ($(PLATFORM),win)
     LDLIBS += -lshlwapi
 endif
 
-OUT_FILE := asslang
+OUT_FILE := ass
 SRC_DIR := src
 BUILD_DIR := build
 OBJ_DIR := obj/$(PLATFORM)

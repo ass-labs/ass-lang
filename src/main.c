@@ -13,43 +13,6 @@ int main()
     return 0;
 }
 
-// typedef enum : uint8_t
-// {
-//     ____tok_kw_start,
-
-//     TOK_KW_IF,
-//     TOK_KW_ELSE,
-//     TOK_KW_WHILE,
-
-//     TOK_KW_AND,
-//     TOK_KW_OR,
-//     TOK_KW_NOT,
-
-//     TOK_KW_TRUE,
-//     TOK_KW_FALSE,
-
-//     ____tok_kw_end,
-// } token_kind_t;
-
-// static char const *TOK_KW_STRS[] = {
-//     [TOK_KW_IF] = "if",     [TOK_KW_ELSE] = "else",   [TOK_KW_WHILE] =
-//     "while", [TOK_KW_AND] = "AND",   [TOK_KW_OR] = "OR",       [TOK_KW_NOT] =
-//     "NOT", [TOK_KW_TRUE] = "True", [TOK_KW_FALSE] = "False",
-// };
-
-// static char const *token_kind_str_repr(token_kind_t kind)
-// {
-//     return kind <= ____tok_kw_start || kind >= ____tok_kw_end
-//                ? ""
-//                : TOK_KW_STRS[kind];
-// }
-
-// typedef struct
-// {
-//     char const *lexeme;
-//     token_kind_t data;
-// } token_t;
-
 // typedef struct state_t
 // {
 //     struct state_t *tr_table;

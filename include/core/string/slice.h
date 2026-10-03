@@ -22,4 +22,7 @@ void string_slice_trim_left(string_slice_t *slice);
 void string_slice_trim_right(string_slice_t *slice);
 void string_slice_trim(string_slice_t *slice);
 
+bool string_slice_starts_with(string_slice_t *str, char const *pref);
+bool string_slice_ends_with(string_slice_t *str, char const *suf);
+
 #endif

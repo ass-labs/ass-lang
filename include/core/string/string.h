@@ -3,6 +3,7 @@
 
 #include "core/collection/vec.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -24,6 +25,9 @@ void string_push_lit(string_t *str, char const *s);
 void string_replacen(string_t *str, char const *old, char const *new, size_t n);
 void string_replace(string_t *str, char const *old, char const *new);
 void string_replace_all(string_t *str, char const *old, char const *new);
+
+bool string_starts_with(string_t *str, char const *pref);
+bool string_ends_with(string_t *str, char const *suf);
 
 void string_assign(string_t *str, char const *s);
 
