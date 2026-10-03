@@ -5,7 +5,6 @@
 #include "program/program.h"
 #include "utils/control.h"
 #include "utils/guard.h"
-#include "utils/log.h"
 
 void program_new(program_t *program, char const *fpath)
 {
@@ -16,10 +15,10 @@ void program_free(program_t *program) { string_free(&program->src); }
 
 void program_read_source(program_t *program)
 {
-    size_t fext_len = strlen(FILE_EXT);
+    size_t fext_len = strlen(CONFIG.file_ext);
     if (program->file_path.n >= fext_len &&
         strncmp(program->file_path.data + (program->file_path.n - fext_len),
-                FILE_EXT, fext_len) != 0)
+                CONFIG.file_ext, fext_len) != 0)
     {
         panic("entry point file provided must be an ASS-lang file and ends "
               "with `.ass`");
@@ -47,5 +46,6 @@ void program_run(program_t *program)
     program_read_source(program);
 
     todo("lexical analyzer");
+
     todo("syntax analyzer");
 }
