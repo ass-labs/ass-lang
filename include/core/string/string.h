@@ -13,6 +13,7 @@ declare_vec(char);
 typedef vec(char) string_t;
 
 void string_init(string_t *str);
+void string_init_wcap(string_t *str, size_t cap);
 void string_from(string_t *str, char const *s);
 void string_repeat(string_t *str, char c, size_t n);
 void string_free(string_t *str);

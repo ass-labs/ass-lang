@@ -25,9 +25,11 @@ char *strndup(const char *s, size_t n)
 define_vec(char);
 define_vec(string_t);
 
-void string_init(string_t *str)
+void string_init(string_t *str) { string_init_wcap(str, 16); }
+
+void string_init_wcap(string_t *str, size_t cap)
 {
-    vec_new(char)(str, NULL, 16);
+    vec_new(char)(str, NULL, cap);
     str->data[0] = '\0';
 }
 
