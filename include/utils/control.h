@@ -11,12 +11,6 @@
 
 _Noreturn void terminate(uint32_t code, char const *fmt, ...);
 
-#define assert(expr, msg_fmt, ...)                                             \
-    {                                                                          \
-        if (!(expr))                                                           \
-            panic(msg_fmt __VA_OPT__(, ) __VA_ARGS__);                         \
-    }
-
 #define panic(fmt, ...)                                                        \
     {                                                                          \
         eprint("program panicked at (%s:%d): ", __FILE__, __LINE__);           \

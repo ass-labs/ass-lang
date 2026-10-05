@@ -5,6 +5,7 @@
 #include "core/string/slice.h"
 #include "lexical/token.h"
 #include "utils/control.h"
+#include "utils/guard.h"
 #include "utils/log.h"
 
 size_t const LOWER_ALPHA_OFS = 0, UPPER_ALPHA_OFS = ('z' - 'a') + 1,

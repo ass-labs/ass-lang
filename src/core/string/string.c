@@ -2,19 +2,17 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "core/collection/slice.h"
 #include "core/collection/vec.h"
 #include "core/string/string.h"
-#include "utils/control.h"
 
 char *strndup(const char *s, size_t n)
 {
     size_t len = 0;
-    while (len < n && s[len])
-        len++;
+    while (len < n && s[len++])
+        ;
 
     char *p = malloc(len + 1);
-    if (!p)
+    if (p == NULL)
         return NULL;
 
     memcpy(p, s, len);

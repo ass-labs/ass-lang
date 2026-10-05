@@ -1,12 +1,11 @@
 #ifndef __UTILS_GUARD_H__
 #define __UTILS_GUARD_H__
 
-#define assert_(expr, fmt, ...)                                                \
-    do                                                                         \
+#define assert(expr, msg_fmt, ...)                                             \
     {                                                                          \
         if (!(expr))                                                           \
-            panic(fmt, __VA_ARGS__);                                           \
-    } while (0);
+            panic(msg_fmt __VA_OPT__(, ) __VA_ARGS__);                         \
+    }
 
 #define todo(fmt, ...)                                                         \
     {                                                                          \

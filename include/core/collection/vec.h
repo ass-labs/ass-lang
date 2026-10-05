@@ -1,10 +1,9 @@
 #ifndef __COLLECTION_VEC_H__
 #define __COLLECTION_VEC_H__
 
-#include <stdlib.h>
-
 #include "core/collection/slice.h"
 #include "core/iter/iter.h"
+#include "utils/control.h"
 
 #define vec_new(T) T##_vec_new
 #define decl_vec_new(T)                                                        \

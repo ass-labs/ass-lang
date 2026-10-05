@@ -1,11 +1,11 @@
 #ifndef __STRING_STRING_H__
 #define __STRING_STRING_H__
 
-#include "core/collection/vec.h"
-
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "core/collection/vec.h"
 
 char *strndup(const char *s, size_t n);
 

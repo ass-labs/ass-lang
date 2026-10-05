@@ -53,6 +53,8 @@ OBJECTS := $(SOURCES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 DEPS := $(OBJECTS:.o=.d)
 TARGET := $(BUILD_DIR)/$(OUT_FILE)$(EXE)
 
+SAMPLE_PROJ_SRC := tests/sample_proj/src/main.ass
+
 .PHONY: all run clean vars
 
 build: $(TARGET)
@@ -66,7 +68,10 @@ $(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS) $(LDFLAGS) $(LDLIBS) -o $@
 
 run: build
-	$(call RUN,$(TARGET)) run tests
+	$(call RUN,$(TARGET)) run $(SAMPLE_PROJ_SRC)
+
+tests: build
+	$(call RUN,$(TARGET)) tests
 
 vars:
 	@echo Platform: $(PLATFORM) (host: $(HOST))
