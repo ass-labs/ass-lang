@@ -13,16 +13,3 @@ void terminate(uint32_t code, const char *fmt, ...)
     va_end(args);
     exit(code);
 }
-
-void panic(char const *fmt, ...)
-{
-    va_list args;
-    va_start(args, fmt);
-
-    eprint("program panicked at (%s:%d): ", __FILE__, __LINE__);
-    veprint(fmt, args);
-    eprint("\n");
-
-    va_end(args);
-    __builtin_trap();
-}

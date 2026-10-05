@@ -55,7 +55,7 @@ TARGET := $(BUILD_DIR)/$(OUT_FILE)$(EXE)
 
 .PHONY: all run clean vars
 
-all: $(TARGET)
+build: $(TARGET)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@$(call MKDIR,$(dir $@))
@@ -65,8 +65,8 @@ $(TARGET): $(OBJECTS)
 	@$(call MKDIR,$(BUILD_DIR))
 	$(CC) $(OBJECTS) $(LDFLAGS) $(LDLIBS) -o $@
 
-run: all
-	$(call RUN,$(TARGET))
+run: build
+	$(call RUN,$(TARGET)) run tests
 
 vars:
 	@echo Platform: $(PLATFORM) (host: $(HOST))

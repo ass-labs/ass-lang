@@ -3,6 +3,7 @@
 #include <sys/stat.h>
 
 #include "config.h"
+#include "core/string/slice.h"
 #include "program/program.h"
 #include "utils/control.h"
 #include "utils/guard.h"
@@ -90,7 +91,7 @@ void program_read_source(program_t *program)
 
     FILE *file = fopen(program->file_path.data, "r");
     if (file == NULL)
-        panic("failed to read file: %s", program->file_path);
+        panic("failed to read file: " slice_fmt, use(program->file_path));
 
     fseek(file, 0, SEEK_END);
     size_t fsize = ftell(file);
@@ -100,7 +101,8 @@ void program_read_source(program_t *program)
     size_t read_size = fread(program->src.data, sizeof(char), fsize, file);
 
     if (fsize != read_size)
-        panic("failed to completely read file: %s", program->file_path);
+        panic("failed to completely read file: " slice_fmt,
+              use(program->file_path));
 
     fclose(file);
 }
