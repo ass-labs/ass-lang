@@ -9,4 +9,6 @@
 
 ### Fixes
 
+- [ ] fix unguarded functions with in and out parameters
+
 ### Updates/Refactor

@@ -1,5 +1,5 @@
-#ifndef __COLLECTION_VEC_H__
-#define __COLLECTION_VEC_H__
+#ifndef __CORE_COLLECTION_VEC_H__
+#define __CORE_COLLECTION_VEC_H__
 
 #include "core/collection/slice.h"
 #include "core/iter/iter.h"

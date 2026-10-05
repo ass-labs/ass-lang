@@ -1,5 +1,5 @@
-#ifndef __STRING_SLICE_H__
-#define __STRING_SLICE_H__
+#ifndef __CORE_STRING_SLICE_H__
+#define __CORE_STRING_SLICE_H__
 
 #include "core/collection/vec.h"
 #include "core/string/string.h"

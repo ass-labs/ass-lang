@@ -1,5 +1,5 @@
-#ifndef __ITER_ITER_H__
-#define __ITER_ITER_H__
+#ifndef __CORE_ITER_ITER_H__
+#define __CORE_ITER_ITER_H__
 
 #define iter_new(T) T##_iter_new
 #define decl_iter_new(T) iter(T) iter_new(T)(T const *data, size_t n)

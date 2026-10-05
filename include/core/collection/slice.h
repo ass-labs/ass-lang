@@ -1,5 +1,5 @@
-#ifndef __COLLECTION_SLICE_H__
-#define __COLLECTION_SLICE_H__
+#ifndef __CORE_COLLECTION_SLICE_H__
+#define __CORE_COLLECTION_SLICE_H__
 
 #define view(T) T##_vec_view
 

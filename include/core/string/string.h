@@ -1,5 +1,5 @@
-#ifndef __STRING_STRING_H__
-#define __STRING_STRING_H__
+#ifndef __CORE_STRING_STRING_H__
+#define __CORE_STRING_STRING_H__
 
 #include <stdbool.h>
 #include <stdlib.h>
