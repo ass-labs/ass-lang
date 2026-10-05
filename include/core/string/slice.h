@@ -14,6 +14,8 @@ declare_vec(string_slice_t);
 
 string_slice_t as_slicen(char const *s, size_t n);
 string_slice_t as_slice(char const *s);
+
+size_t string_slice_cmp(string_slice_t a, string_slice_t b);
 vec(string_slice_t) string_slice_split(string_slice_t slice, char const *delim);
 
 void string_slice_to_string(string_slice_t *slice, string_t *out);

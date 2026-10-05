@@ -16,6 +16,11 @@ string_slice_t as_slicen(char const *s, size_t n)
 
 string_slice_t as_slice(char const *s) { return as_slicen(s, strlen(s)); }
 
+size_t string_slice_cmp(string_slice_t a, string_slice_t b)
+{
+    return strncmp(a.data, b.data, a.n);
+}
+
 vec(string_slice_t) string_slice_split(string_slice_t slice, char const *delim)
 {
     vec(string_slice_t) segments;
