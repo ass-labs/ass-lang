@@ -9,7 +9,7 @@
 #define hm_entry(K, V) concat(hm_kv(K, V), _hm_entry_t)
 #define hash_map(K, V) concat(hm_kv(K, V), _hm_t)
 
-#define hm_new(K, V) concat(hm_kv(K, V), _new)
+#define hm_new(K, V) concat(hm_kv(K, V), _hm_new)
 #define decl_hm_new(K, V)                                                      \
     void hm_new(K, V)(hash_map(K, V) * hm, size_t (*key_hash)(K const *),      \
                       bool (*key_eq)(K const *, K const *),                    \
@@ -33,45 +33,42 @@
         hm->val_destr = val_destr;                                             \
     }
 
-#define hm_free(K, V) concat(hm_kv(K, V), _free)
+#define hm_free(K, V) concat(hm_kv(K, V), _hm_free)
 #define decl_hm_free(K, V) void hm_free(K, V)(hash_map(K, V) * hm)
 #define def_hm_free(K, V)                                                      \
     decl_hm_free(K, V)                                                         \
     {                                                                          \
-        if (hm->key_destr || hm->val_destr)                                    \
+        for (size_t i = 0; i < hm->cap; ++i)                                   \
         {                                                                      \
-            for (size_t i = 0; i < hm->cap; ++i)                               \
-            {                                                                  \
-                hm_entry(K, V) *entry = hm->entries[i];                        \
-                if (entry == NULL)                                             \
-                    continue;                                                  \
+            hm_entry(K, V) *entry = hm->entries[i];                            \
+            if (entry == NULL)                                                 \
+                continue;                                                      \
                                                                                \
-                if (hm->key_destr)                                             \
-                    hm->key_destr(&entry->key);                                \
+            if (hm->key_destr)                                                 \
+                hm->key_destr(&entry->key);                                    \
                                                                                \
-                if (hm->val_destr)                                             \
-                    hm->val_destr(&entry->val);                                \
+            if (hm->val_destr)                                                 \
+                hm->val_destr(&entry->val);                                    \
                                                                                \
-                free(entry);                                                   \
-            }                                                                  \
+            free(entry);                                                       \
         }                                                                      \
                                                                                \
         free(hm->entries);                                                     \
     }
 
-#define hm_load_factor(K, V) concat(hm_kv(K, V), _load_factor)
+#define hm_load_factor(K, V) concat(hm_kv(K, V), _hm_load_factor)
 #define decl_hm_load_factor(K, V)                                              \
     double hm_load_factor(K, V)(hash_map(K, V) * hm)
 #define def_hm_load_factor(K, V)                                               \
     decl_hm_load_factor(K, V) { return (double)hm->len / hm->cap; }
 
-#define hm_hash_key(K, V) concat(hm_kv(K, V), _hash_key)
+#define hm_hash_key(K, V) concat(hm_kv(K, V), _hm_hash_key)
 #define decl_hm_hash_key(K, V)                                                 \
     size_t hm_hash_key(K, V)(hash_map(K, V) const *hm, K const *key)
 #define def_hm_hash_key(K, V)                                                  \
     decl_hm_hash_key(K, V) { return hm->key_hash(key) % hm->cap; }
 
-#define hm_rehash(K, V) concat(hm_kv(K, V), _rehash)
+#define hm_rehash(K, V) concat(hm_kv(K, V), _hm_rehash)
 #define decl_hm_rehash(K, V) void hm_rehash(K, V)(hash_map(K, V) * hm)
 #define def_hm_rehash(K, V)                                                    \
     decl_hm_rehash(K, V)                                                       \
@@ -114,10 +111,11 @@
             }                                                                  \
         }                                                                      \
                                                                                \
+        free(hm->entries);                                                     \
         hm->entries = temp;                                                    \
     }
 
-#define hm_insert(K, V) concat(hm_kv(K, V), _insert)
+#define hm_insert(K, V) concat(hm_kv(K, V), _hm_insert)
 #define decl_hm_insert(K, V)                                                   \
     void hm_insert(K, V)(hash_map(K, V) * hm, K key, V val)
 #define def_hm_insert(K, V)                                                    \
@@ -159,7 +157,7 @@
         ++hm->len;                                                             \
     }
 
-#define hm_get(K, V) concat(hm_kv(K, V), _get)
+#define hm_get(K, V) concat(hm_kv(K, V), _hm_get)
 #define decl_hm_get(K, V)                                                      \
     V const *hm_get(K, V)(hash_map(K, V) const *hm, K const *key)
 #define def_hm_get(K, V)                                                       \
@@ -174,7 +172,7 @@
         return curr == NULL ? NULL : &curr->val;                               \
     }
 
-#define hm_get_mut(K, V) concat(hm_kv(K, V), _get_mut)
+#define hm_get_mut(K, V) concat(hm_kv(K, V), _hm_get_mut)
 #define decl_hm_get_mut(K, V) V *hm_get_mut(K, V)(hash_map(K, V) * hm, K * key)
 #define def_hm_get_mut(K, V)                                                   \
     decl_hm_get_mut(K, V) { return (V *)hm_get(K, V)(hm, key); }
@@ -213,5 +211,11 @@
     def_hm_insert(K, V);                                                       \
     def_hm_get(K, V);                                                          \
     def_hm_get_mut(K, V);
+
+#define hasher(T) T##_hasher
+#define hasher_decl(T) size_t hasher(T)(T const *val)
+
+#define eq(T) T##_eq
+#define eq_decl(T) bool eq(T)(T const *a, T const *b)
 
 #endif

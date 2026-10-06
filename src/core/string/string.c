@@ -2,8 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "core/collection/hash_map.h"
 #include "core/collection/vec.h"
 #include "core/string/string.h"
+#include "utils/numeric.h"
 
 char *strndup(const char *s, size_t n)
 {
@@ -50,6 +52,11 @@ void string_repeat(string_t *str, char c, size_t n)
 }
 
 void string_free(string_t *str) { vec_free(char)(str); }
+
+size_t string_cmp(string_t const *a, string_t const *b)
+{
+    return strncmp(a->data, b->data, max(a->len, b->len));
+}
 
 void string_push(string_t *str, char c) { vec_push(char)(str, c); }
 void string_push_lit(string_t *str, char const *s)
@@ -134,3 +141,13 @@ void string_rev(string_t *str)
         str->data[i] = opp;
     }
 }
+
+hasher_decl(string_t)
+{
+    // NOTE: TEMP
+    size_t hash = 0;
+    vec_for_each(char, c, (*val), { hash += (size_t)(*c) | 0x12f21; });
+    return hash;
+}
+
+eq_decl(string_t) { return string_cmp(a, b) != 0; }

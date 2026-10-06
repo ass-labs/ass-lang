@@ -3,7 +3,8 @@
 
 #define view(T) T##_vec_view
 
-#define decl_view(T) slice(T) view(T)(vec(T) * data, size_t offset, size_t n)
+#define decl_view(T)                                                           \
+    slice(T) view(T)(vec(T) const *data, size_t offset, size_t n)
 
 #define def_view(T)                                                            \
     decl_view(T) { return (slice(T)){data->data + offset, n}; }

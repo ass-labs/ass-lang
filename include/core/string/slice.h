@@ -10,7 +10,7 @@ typedef char_slice_t string_slice_t;
 declare_vec(string_slice_t);
 
 #define slice_fmt "%.*s"
-#define use(slice) (int)slice.n, slice.data
+#define use(slice) (int)(slice).n, (slice).data
 
 string_slice_t as_slicen(char const *s, size_t n);
 string_slice_t as_slice(char const *s);
@@ -26,5 +26,8 @@ void string_slice_trim(string_slice_t *slice);
 
 bool string_slice_starts_with(string_slice_t *str, char const *pref);
 bool string_slice_ends_with(string_slice_t *str, char const *suf);
+
+hasher_decl(string_slice_t);
+eq_decl(string_slice_t);
 
 #endif

@@ -68,10 +68,7 @@ $(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS) $(LDFLAGS) $(LDLIBS) -o $@
 
 run: build
-	$(call RUN,$(TARGET)) run $(SAMPLE_PROJ_SRC)
-
-tests: build
-	$(call RUN,$(TARGET)) tests
+	$(call RUN,$(TARGET)) $(ARGS)
 
 vars:
 	@echo Platform: $(PLATFORM) (host: $(HOST))

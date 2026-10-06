@@ -90,3 +90,14 @@ bool string_slice_ends_with(string_slice_t *str, char const *suf)
     size_t suf_len = strlen(suf);
     return strncmp(str->data + (str->n - suf_len), suf, suf_len) != 0;
 }
+
+hasher_decl(string_slice_t)
+{
+    string_t temp = (string_t){.data = (char *)val->data,
+                               .el_destr = NULL,
+                               .len = val->n,
+                               .cap = val->n};
+    return hasher(string_t)(&temp);
+}
+
+eq_decl(string_slice_t) { return string_slice_cmp(*a, *b) == 0; }

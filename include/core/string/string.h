@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "core/collection/hash_map.h"
 #include "core/collection/vec.h"
 
 char *strndup(const char *s, size_t n);
@@ -18,6 +19,8 @@ void string_init_wcap(string_t *str, size_t cap);
 void string_from(string_t *str, char const *s);
 void string_repeat(string_t *str, char c, size_t n);
 void string_free(string_t *str);
+
+size_t string_cmp(string_t const *a, string_t const *b);
 
 void string_push(string_t *str, char c);
 void string_push_lit(string_t *str, char const *s);
@@ -34,5 +37,8 @@ void string_assign(string_t *str, char const *s);
 void string_rev(string_t *str);
 
 declare_vec(string_t);
+
+hasher_decl(string_t);
+eq_decl(string_t);
 
 #endif
