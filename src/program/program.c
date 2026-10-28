@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <time.h>
 
 #include "config.h"
 #include "core/string/slice.h"
@@ -20,6 +21,8 @@
 #include <unistd.h>
 #define PATH_SEPARATOR '/'
 #endif
+
+#define SYM_TABLE_EXT ".sym"
 
 static bool is_regular_file(const char *path)
 {
@@ -106,8 +109,48 @@ void program_read_source(program_t *program)
     program->src.data[read_size] = '\0';
 }
 
+static void write_sym_table(FILE *out, lexer_t const *lexer)
+{
+    fprintf(out, "%-10s %-12s %s\n", "ROW:COL", "KIND", "LEXEME");
+    vec_for_each(token_t, tok, lexer->tokens, {
+        char pos[24];
+        snprintf(pos, sizeof(pos), "%u:%u", tok->row, tok->col);
+        fprintf(out, "%-10s %-12s " slice_fmt "\n", pos,
+                token_kind_name(tok->kind), use(tok->lexeme));
+    });
+}
+
+static void program_output_sym_table(program_t *program, lexer_t const *lexer)
+{
+    if (CONFIG.out_conf & OCONF_GEN_SYM_TABLE)
+    {
+        size_t size = program->file_path.len + sizeof(SYM_TABLE_EXT);
+
+        drop(string_free) string_t out_path;
+        string_init_wcap(&out_path, size);
+        snprintf(out_path.data, size, "%s" SYM_TABLE_EXT,
+                 program->file_path.data);
+        out_path.len = size - 1;
+
+        FILE *out = fopen(out_path.data, "w");
+        if (out == NULL)
+            panic("failed to write symbol table file: %s", out_path.data);
+
+        write_sym_table(out, lexer);
+        fclose(out);
+
+        dprintln("symbol table written to '%s'", out_path.data);
+    }
+
+    if (CONFIG.out_conf & OCONF_LOG_SYM_TABLE)
+        write_sym_table(stdout, lexer);
+}
+
 bool program_run(program_t *program)
 {
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+
     program_read_source(program);
     dprintln("running file '%s'", program->file_path.data);
 
@@ -116,7 +159,13 @@ bool program_run(program_t *program)
               as_slicen(program->src.data, program->src.len));
     lexer_analyze(&lexer);
 
-    lexer_print_tokens(&lexer);
+    program_output_sym_table(program, &lexer);
+
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    long elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L +
+                      (end.tv_nsec - start.tv_nsec),
+         elapsed_mus = elapsed_ns / 1000;
+    dprintln("time elapsed: %ld ns, %ld μs", elapsed_ns, elapsed_mus);
 
     return lexer.err_count == 0;
 }

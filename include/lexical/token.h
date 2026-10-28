@@ -73,7 +73,7 @@ typedef struct
 {
     string_slice_t lexeme;
     token_kind_t kind;
-    uint32_t line, col;
+    uint32_t row, col;
 } token_t;
 
 declare_vec(token_t);

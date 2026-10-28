@@ -5,3 +5,6 @@
 /.clang-format
 
 /archive
+
+# Generated symbol tables
+*.sym
