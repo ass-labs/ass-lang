@@ -162,7 +162,7 @@ static void init_char_lit_automaton(state_reg_t *reg, state_id_t root_id)
 static void init_symbol_automaton(state_reg_t *reg, state_id_t root_id)
 {
     token_kind_t const kinds[] = {
-        TOK_PLUS,     TOK_MINUS,    TOK_STAR,   TOK_SLASH,
+        TOK_PLUS,     TOK_MINUS,    TOK_STAR,   // TOK_SLASH removed - handled below
         TOK_PERCENT,  TOK_DOT,      TOK_COMMA,  TOK_SEMI_COLON,
         TOK_LBRACE,   TOK_RBRACE,   TOK_LPAREN, TOK_RPAREN,
         TOK_LBRACKET, TOK_RBRACKET,
@@ -174,6 +174,13 @@ static void init_symbol_automaton(state_reg_t *reg, state_id_t root_id)
         state_id_t sym_id = state_reg_register(reg, STF_ACCEPTING, kinds[i]);
         state_reg_insert(reg, root_id, (uint8_t)repr[0], sym_id);
     }
+
+    // Handle / and // as two-character operators
+    state_id_t slash_id = state_reg_register(reg, STF_ACCEPTING, TOK_SLASH);
+    state_reg_insert(reg, root_id, '/', slash_id);
+
+    state_id_t slash_slash_id = state_reg_register(reg, STF_ACCEPTING, TOK_SLASH_SLASH);
+    state_reg_insert(reg, slash_id, '/', slash_slash_id);
 }
 
 void lexer_init_automaton(lexer_t *lexer)
