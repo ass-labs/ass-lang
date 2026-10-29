@@ -22,6 +22,7 @@ typedef enum : uint8_t
     TOK_STAR,    // * - Asterisk
     TOK_SLASH,   // /
     TOK_PERCENT, // %
+    TOK_SLASH_SLASH, // // - Floor
 
     // Keywords
     ____tok_kw_start,
