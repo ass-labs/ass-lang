@@ -164,19 +164,23 @@ The proposal defines no noise words, so the lexer doesn't recognize any.
 
 ## Implementation notes
 
-All tokens are recognized by a single DFA built in
-`src/lexical/analyzer.c::lexer_init_automaton`. The lexer then runs it with
-maximal munch.
+All tokens are recognized by a single hand-coded DFA in `src/lexical/dfa.c`.
+Its states are the `dfa_state_t` enum in `include/lexical/dfa.h`. The
+transitions are `switch` statements in `dfa_step`, and `dfa_accepts` maps each
+accepting state to its token kind. `lexer_munch` in `src/lexical/analyzer.c`
+runs the DFA with maximal munch.
 
-- **Keywords and reserved words** (`init_ident_kw_automaton`): each word is a
-  path that branches off the identifier automaton. The intermediate states
-  accept `IDENT`, and the last state accepts the word's kind.
-- **Symbols** (`init_symbol_automaton`): the operators and delimiters are
-  stored as a trie, so `/`, `//`, `/=` and `//=` share their prefix states. A
-  prefix that isn't a symbol on its own, such as `!`, stays non-accepting.
-- **Line comments** (`init_line_comment_automaton`): `$` → `$` → an accepting
-  body that loops on every byte except `\r` and `\n`.
-- **Block comments** (`init_block_comment_automaton`):
+- **Keywords and reserved words**: each word is a path of states that
+  branches off the start state, one state per prefix (`DFA_W` → `DFA_WH` →
+  … → `DFA_WHILE`). The intermediate states accept `IDENT`, and the last state
+  accepts the word's kind. On any other identifier character a path leaves to
+  `DFA_IDENT`, so `whilst` and `ifx` are identifiers.
+- **Symbols**: multi-character operators share their prefix states, so `/`,
+  `//`, `/=` and `//=` all start at `DFA_SLASH`. A prefix that isn't a symbol
+  on its own, such as `!`, stays non-accepting.
+- **Line comments**: `$` → `$` → an accepting body that loops on every byte
+  except `\r` and `\n`.
+- **Block comments**:
 
   ```
   () -@-> () -$-> () -$-> (body) -@-> (@) -$-> (@$) -$-> ((end))
@@ -185,15 +189,19 @@ maximal munch.
                            +----------[^@$]------+
   ```
 
-- **Bad identifiers** (`init_num_lit_automaton`): the `INT` and `FLOAT` states
-  go to an accepting `UNKNOWN` state on any identifier character.
+- **Bad identifiers**: `DFA_INT` and `DFA_FLOAT` go to the accepting
+  `DFA_BAD_IDENT` state (kind `UNKNOWN`) on any identifier character.
   `lexer_analyze` reports it as an error.
 
-To add a keyword or reserved word, add its kind between the matching
-`____tok_*_start` and `____tok_*_end` sentinels in `include/lexical/token.h`.
-Then give it a spelling in `TOKEN_KIND_STRS` and a name in `TOKEN_KIND_NAMES`.
-The automaton picks it up automatically. To add an operator, also add its kind
-to the `kinds` list in `init_symbol_automaton` and to `token_kind_category`.
+To add a keyword, reserved word or operator:
+
+1. Add its kind in `include/lexical/token.h`. Keywords and reserved words go
+   between the matching `____tok_*_start` and `____tok_*_end` sentinels.
+2. Give it a spelling in `TOKEN_KIND_STRS` and a name in `TOKEN_KIND_NAMES`.
+   Operators also need an entry in `token_kind_category`.
+3. Add a state for each new prefix to `dfa_state_t`, add the transitions to
+   `dfa_step`, and map the final state to the kind in `dfa_accepts`. Prefixes
+   of keywords must also be listed as accepting `TOK_IDENT`.
 
 ## Test sources
 
