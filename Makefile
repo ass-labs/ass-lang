@@ -70,6 +70,9 @@ $(TARGET): $(OBJECTS)
 run: build
 	$(call RUN,$(TARGET)) $(ARGS)
 
+# rt: build
+#     $(call RUN,$(TARGET)) run tests/src/sample.ass
+
 tests: build
 	ARGS="tests"
 	$(MAKE) run

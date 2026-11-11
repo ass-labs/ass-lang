@@ -1,0 +1,13 @@
+$$ This is a comment
+wnum x = 1; $$ trailing comment
+$$$ still a single-line comment
+@$$
+This is a multi-line comment block
+for documentation purposes
+@$$
+wnum y = 2; @$$ inline block @$$ wnum z = 3;
+@$$ tricky @ $ @$ $$ body @$$
+@$$@$$
+$ @ @$
+@$$ this one is never closed
+wnum lost = 0;
