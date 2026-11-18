@@ -162,10 +162,9 @@ static void init_char_lit_automaton(state_reg_t *reg, state_id_t root_id)
 static void init_symbol_automaton(state_reg_t *reg, state_id_t root_id)
 {
     token_kind_t const kinds[] = {
-        TOK_PLUS,     TOK_MINUS,    TOK_STAR,   TOK_SLASH,
-        TOK_PERCENT,  TOK_DOT,      TOK_COMMA,  TOK_SEMI_COLON,
-        TOK_LBRACE,   TOK_RBRACE,   TOK_LPAREN, TOK_RPAREN,
-        TOK_LBRACKET, TOK_RBRACKET,
+        TOK_PLUS,   TOK_MINUS,  TOK_STAR,       TOK_SLASH,    TOK_PERCENT,
+        TOK_DOT,    TOK_COMMA,  TOK_SEMI_COLON, TOK_LBRACE,   TOK_RBRACE,
+        TOK_LPAREN, TOK_RPAREN, TOK_LBRACKET,   TOK_RBRACKET,
     };
 
     for (size_t i = 0; i < (sizeof(kinds) / sizeof(kinds[0])); ++i)
