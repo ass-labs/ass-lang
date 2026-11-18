@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "core/collection/vec.h"
 #include "lexical/analyzer.h"
 #include "lexical/dfa.h"
 #include "lexical/token.h"
@@ -123,7 +124,11 @@ void lexer_analyze(lexer_t *lexer)
 
         tok.lexeme = as_slicen(lexer->src.data + lexer->offset, len);
         if (tok.kind != TOK_WHITESPACE)
-            vec_push(token_t)(&lexer->tokens, tok);
+        {
+            token_t *tail = vec_expand(token_t)(&lexer->tokens);
+            tail->kind = tok.kind, tail->row = tok.row, tail->col = tok.col,
+            tail->lexeme = tok.lexeme;
+        }
 
         lexer_advance(lexer, len);
     }
