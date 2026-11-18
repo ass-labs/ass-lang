@@ -109,14 +109,40 @@ void program_read_source(program_t *program)
     program->src.data[read_size] = '\0';
 }
 
+/// Writes `lexeme` on a single line, escaping line endings and tabs (e.g. of
+/// multi-line comments) so every token stays on its own row.
+static void write_lexeme(FILE *out, string_slice_t lexeme)
+{
+    for (size_t i = 0; i < lexeme.n; ++i)
+    {
+        switch (lexeme.data[i])
+        {
+        case '\n':
+            fputs("\\n", out);
+            break;
+        case '\r':
+            fputs("\\r", out);
+            break;
+        case '\t':
+            fputs("\\t", out);
+            break;
+        default:
+            fputc(lexeme.data[i], out);
+        }
+    }
+}
+
 static void write_sym_table(FILE *out, lexer_t const *lexer)
 {
-    fprintf(out, "%-10s %-12s %s\n", "ROW:COL", "KIND", "LEXEME");
+    fprintf(out, "%-10s %-14s %-16s %s\n", "ROW:COL", "CATEGORY", "KIND",
+            "LEXEME");
     vec_for_each(token_t, tok, lexer->tokens, {
         char pos[24];
         snprintf(pos, sizeof(pos), "%u:%u", tok->row, tok->col);
-        fprintf(out, "%-10s %-12s " slice_fmt "\n", pos,
-                token_kind_name(tok->kind), use(tok->lexeme));
+        fprintf(out, "%-10s %-14s %-16s ", pos,
+                token_kind_category(tok->kind), token_kind_name(tok->kind));
+        write_lexeme(out, tok->lexeme);
+        fputc('\n', out);
     });
 }
 

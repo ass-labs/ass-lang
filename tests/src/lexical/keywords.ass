@@ -6,3 +6,8 @@ True FALSE
 
 while WHILE while not NOT definitely Something
 If else IF Else Elif
+
+wnum dnum char bool write read
+wnumx dnums chars boolean writer reader
+wnum8 wnum16 wnum32 wnum64 dnum8 dnum16 dnum32 dnum64
+wnum7 wnum128 auto let str auto_ letter string

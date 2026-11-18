@@ -1,0 +1,52 @@
+$$ Sample ASS-Lang program covering every token in the proposal
+@$$
+Applied Student-Oriented Scripting Language
+Group 6 sample program
+@$$
+
+wnum age;
+read(age);
+write(age);
+
+wnum score = 94;
+score = 95;
+dnum ratio = 15.05;
+char grade = 'A';
+char newline = '\n';
+bool passed = True;
+bool failed = False;
+
+wnum a = 1 + 1, b = 1 - 1, c = 2 * 4;
+dnum d = 4 / 2, e = 4 % 2, f = 4 // 3;
+
+bool result = (a == b);
+result = (a != b);
+result = (a < b);
+result = (a > b);
+result = (a <= b);
+result = (a >= b);
+result = (passed AND failed);
+result = (passed OR failed);
+result = (NOT passed);
+
+if (score >= 90) {
+    write("Passed");
+}
+else if (score >= 75) {
+    write("Barely");
+}
+else {
+    write("Failed");
+}
+
+wnum count = 0;
+while (count < 3) {
+    write(count);
+    count = count + 1;
+}
+
+$$ Invalid lexemes
+wnum 123variable = 1;
+variable@123 # ` ~ ? : \ ^ & | !
+"unterminated string
+'ab'

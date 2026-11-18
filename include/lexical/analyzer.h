@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "automaton/state.h"
 #include "core/string/slice.h"
 #include "lexical/token.h"
 
@@ -12,9 +11,6 @@ typedef struct
 {
     char const *file_path;
     string_slice_t src;
-
-    state_reg_t state_reg;
-    state_id_t root_id;
 
     /// Position of the next character to analyze
     size_t offset, row, col;
@@ -26,12 +22,6 @@ typedef struct
 /// `file_path` is only used for error messages.
 void lexer_new(lexer_t *lexer, char const *file_path, string_slice_t src);
 void lexer_free(lexer_t *lexer);
-
-/// Builds the lexer's DFA into `lexer->state_reg` and sets `lexer->root_id`.
-///
-/// Accepting states carry the `token_kind_t` they accept in `state_t.data`.
-/// Inputs without a transition lead to `STATE_DEAD`.
-void lexer_init_automaton(lexer_t *lexer);
 
 bool lexer_eof(lexer_t *lexer);
 
