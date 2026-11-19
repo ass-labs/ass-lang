@@ -70,6 +70,9 @@ $(TARGET): $(OBJECTS)
 run: build
 	$(call RUN,$(TARGET)) $(ARGS)
 
+qr: build
+	$(call RUN,$(TARGET)) run tests/src/sample.ass
+
 # rt: build
 #     $(call RUN,$(TARGET)) run tests/src/sample.ass
 

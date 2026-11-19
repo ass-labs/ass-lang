@@ -1,13 +1,10 @@
 #ifndef __AST_TY_H__
 #define __AST_TY_H__
 
+#include <stdint.h>
+
 typedef struct
 {
-    enum ty_kind_t
-    {
-        TY_NOMINAL,
-    } kind;
-
     union ty_data_t
     {
         struct nominal_ty_t
@@ -15,6 +12,11 @@ typedef struct
 
         } nominal;
     } *data;
+
+    enum ty_kind_t : uint8_t
+    {
+        TY_NOMINAL,
+    } kind;
 } ty_t;
 
 typedef enum ty_kind_t ty_kind_t;

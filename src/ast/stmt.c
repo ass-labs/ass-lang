@@ -1,4 +1,7 @@
 #include "ast/stmt.h"
+#include "core/collection/vec.h"
+
+define_vec(stmt_t);
 
 void stmt_init(stmt_t *stmt, stmt_kind_t kind)
 {

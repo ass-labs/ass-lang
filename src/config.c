@@ -6,5 +6,8 @@ config_t CONFIG = (config_t){
                                     // | OCONF_LOG_SYM_TABLE ///  Logs the
                                     // symbol table per file in the stdout
     ,
+    .p_conf = PCONF_LR   /// Parses the program from left-to-right
+              | PCONF_RL // Parses the program from right-to-left
+    ,
     .debug = true,
 };

@@ -17,10 +17,20 @@ typedef enum : uint8_t
     OCONF_LOG_SYM_TABLE = 1 << 1,
 } out_config_t;
 
+typedef enum : uint8_t
+{
+    PCONF_NONE = 0,
+    /// Parses the program from left-to-right
+    PCONF_LR = 1 << 0,
+    /// Parses the program from right-to-left
+    PCONF_RL = 1 << 1,
+} parser_config_t;
+
 typedef struct
 {
     char const *file_ext;
     out_config_t out_conf;
+    parser_config_t p_conf;
     bool debug;
 } config_t;
 

@@ -9,15 +9,6 @@ struct block_t;
 
 typedef struct
 {
-    enum stmt_kind_t
-    {
-        STMT_DECL,
-        STMT_IF,
-        STMT_WHILE,
-        STMT_INPUT,
-        STMT_OUTPUT,
-        STMT_EXPR,
-    } kind;
     union stmt_data_t
     {
         struct decl_stmt_t
@@ -50,6 +41,16 @@ typedef struct
 
         // TODO: expr
     } *data;
+
+    enum stmt_kind_t : uint8_t
+    {
+        STMT_DECL,
+        STMT_IF,
+        STMT_WHILE,
+        STMT_INPUT,
+        STMT_OUTPUT,
+        STMT_EXPR,
+    } kind;
 } stmt_t;
 
 typedef enum stmt_kind_t stmt_kind_t;

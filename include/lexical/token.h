@@ -41,20 +41,14 @@ typedef enum : uint8_t
     TOK_LT_EQ,   // <=
     TOK_GT_EQ,   // >=
 
+    TOK_NW_LET,
+
     // Keywords
     ____tok_kw_start,
-
-    TOK_KW_WNUM,
-    TOK_KW_DNUM,
-    TOK_KW_CHAR,
-    TOK_KW_BOOL,
 
     TOK_KW_IF,
     TOK_KW_ELSE,
     TOK_KW_WHILE,
-
-    TOK_KW_WRITE,
-    TOK_KW_READ,
 
     TOK_KW_AND,
     TOK_KW_OR,
@@ -68,6 +62,14 @@ typedef enum : uint8_t
     // Reserved words, lexed but not yet implemented
     ____tok_rw_start,
 
+    TOK_RW_WNUM,
+    TOK_RW_DNUM,
+    TOK_KW_CHAR,
+    TOK_KW_BOOL,
+
+    TOK_RW_WRITE,
+    TOK_RW_READ,
+
     TOK_RW_WNUM8,
     TOK_RW_WNUM16,
     TOK_RW_WNUM32,
@@ -78,7 +80,6 @@ typedef enum : uint8_t
     TOK_RW_DNUM64,
 
     TOK_RW_AUTO,
-    TOK_RW_LET,
     TOK_RW_STR,
 
     ____tok_rw_end,

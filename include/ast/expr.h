@@ -5,14 +5,15 @@
 
 typedef struct
 {
-    enum expr_kind_t
-    {
-        EXPR_LITERAL,
-    } kind;
     union expr_data_t
     {
         token_t *literal;
     } *data;
+
+    enum expr_kind_t : uint8_t
+    {
+        EXPR_LITERAL,
+    } kind;
 } expr_t;
 
 typedef enum expr_kind_t expr_kind_t;

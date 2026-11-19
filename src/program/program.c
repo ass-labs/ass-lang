@@ -5,11 +5,13 @@
 #include <sys/stat.h>
 #include <time.h>
 
+#include "ast/program.h"
 #include "config.h"
 #include "core/string/slice.h"
 #include "core/string/string.h"
 #include "lexical/analyzer.h"
 #include "program/program.h"
+#include "syntax/analyzer.h"
 #include "utils/control.h"
 #include "utils/drop.h"
 #include "utils/guard.h"
@@ -117,17 +119,17 @@ static void write_lexeme(FILE *out, string_slice_t lexeme)
     {
         switch (lexeme.data[i])
         {
-        case '\n':
-            fputs("\\n", out);
-            break;
-        case '\r':
-            fputs("\\r", out);
-            break;
-        case '\t':
-            fputs("\\t", out);
-            break;
-        default:
-            fputc(lexeme.data[i], out);
+            case '\n':
+                fputs("\\n", out);
+                break;
+            case '\r':
+                fputs("\\r", out);
+                break;
+            case '\t':
+                fputs("\\t", out);
+                break;
+            default:
+                fputc(lexeme.data[i], out);
         }
     }
 }
@@ -139,8 +141,8 @@ static void write_sym_table(FILE *out, lexer_t const *lexer)
     vec_for_each(token_t, tok, lexer->tokens, {
         char pos[24];
         snprintf(pos, sizeof(pos), "%u:%u", tok->row, tok->col);
-        fprintf(out, "%-10s %-14s %-16s ", pos,
-                token_kind_category(tok->kind), token_kind_name(tok->kind));
+        fprintf(out, "%-10s %-14s %-16s ", pos, token_kind_category(tok->kind),
+                token_kind_name(tok->kind));
         write_lexeme(out, tok->lexeme);
         fputc('\n', out);
     });
@@ -180,12 +182,21 @@ bool program_run(program_t *program)
     program_read_source(program);
     dprintln("running file '%s'", program->file_path.data);
 
+    // Lexical Analysis
     drop(lexer_free) lexer_t lexer;
     lexer_new(&lexer, program->file_path.data,
               as_slicen(program->src.data, program->src.len));
     lexer_analyze(&lexer);
 
     program_output_sym_table(program, &lexer);
+
+    // Syntactic Analysis
+    drop(parser_free) parser_t parser;
+    parser_new(&parser);
+
+    program_node_t pnode;
+    program_node_init(&pnode);
+    parser_parse(&parser, &pnode);
 
     clock_gettime(CLOCK_MONOTONIC, &end);
     long elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L +
