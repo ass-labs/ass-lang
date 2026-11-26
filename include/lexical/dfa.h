@@ -71,6 +71,7 @@ typedef enum : uint8_t
     DFA_STAR, DFA_STAR_EQ,
     DFA_SLASH, DFA_SLASH_EQ, DFA_SLASH_SLASH, DFA_SLASH_SLASH_EQ,
     DFA_PERCENT,
+    DFA_CARET,
     DFA_EQ, DFA_EQ_EQ,
     /// `!` is only a prefix of `!=` and does not accept on its own.
     DFA_BANG, DFA_BANG_EQ,

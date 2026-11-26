@@ -100,6 +100,8 @@ static dfa_state_t start_step(uint8_t c)
             return DFA_SLASH;
         case '%':
             return DFA_PERCENT;
+        case '^':
+            return DFA_CARET;
         case '=':
             return DFA_EQ;
         case '!':
@@ -649,6 +651,9 @@ bool dfa_accepts(dfa_state_t state, token_kind_t *kind)
             return true;
         case DFA_PERCENT:
             *kind = TOK_PERCENT;
+            return true;
+        case DFA_CARET:
+            *kind = TOK_CARET;
             return true;
         case DFA_EQ:
             *kind = TOK_EQ;

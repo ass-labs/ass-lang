@@ -3,15 +3,16 @@
 
 #include <stdint.h>
 
+#include "lexical/token.h"
+
 typedef struct
 {
     union ty_data_t
     {
-        struct nominal_ty_t
-        {
-
-        } nominal;
-    } *data;
+        /// A built-in type named by its keyword: `wnum`, `dnum`, `bool` or
+        /// `char`.
+        token_t nominal;
+    } data;
 
     enum ty_kind_t : uint8_t
     {
@@ -20,9 +21,7 @@ typedef struct
 } ty_t;
 
 typedef enum ty_kind_t ty_kind_t;
-typedef struct nominal_ty_t ty_nominal_t;
 
-void ty_init(ty_t *ty, ty_kind_t kind);
-void ty_free(ty_t *ty);
+ty_t ty_new_nominal(token_t name);
 
 #endif

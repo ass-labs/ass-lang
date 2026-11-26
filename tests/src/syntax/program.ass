@@ -1,0 +1,14 @@
+$$ every statement kind
+let wnum count = 0, total
+dnum avg = 1.5 * (2 + 3) // 2
+bool done = NOT False AND count < 3 OR True
+char c = 'a'
+read(total, count)
+write("count = ", count, -count ^ 2 ^ 3)
+count += 1
+total //= 2
+if (count > 0) { write("pos") } else if (count < 0) { write("neg") } else { write("zero") }
+while (count < 3) {
+    while (total >= 1) { total = total - 1 }
+    count = count + 1
+}

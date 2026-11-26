@@ -9,6 +9,7 @@ char const *TOKEN_KIND_STRS[____tok_count] = {
     [TOK_SLASH] = "/",
     [TOK_PERCENT] = "%",
     [TOK_SLASH_SLASH] = "//",
+    [TOK_CARET] = "^",
 
     [TOK_EQ] = "=",
     [TOK_PLUS_EQ] = "+=",
@@ -77,6 +78,7 @@ char const *TOKEN_KIND_NAMES[____tok_count] = {
     [TOK_SLASH] = "SLASH",
     [TOK_PERCENT] = "PERCENT",
     [TOK_SLASH_SLASH] = "SLASH_SLASH",
+    [TOK_CARET] = "CARET",
 
     [TOK_EQ] = "EQ",
     [TOK_PLUS_EQ] = "PLUS_EQ",
@@ -92,7 +94,7 @@ char const *TOKEN_KIND_NAMES[____tok_count] = {
     [TOK_LT_EQ] = "LT_EQ",
     [TOK_GT_EQ] = "GT_EQ",
 
-    [TOK_NW_LET] = "RW_LET",
+    [TOK_NW_LET] = "NW_LET",
 
     [TOK_KW_CHAR] = "KW_CHAR",
     [TOK_KW_BOOL] = "KW_BOOL",
@@ -135,6 +137,7 @@ char const *TOKEN_KIND_NAMES[____tok_count] = {
 
     [TOK_WHITESPACE] = "WHITESPACE",
     [TOK_UNKNOWN] = "UNKNOWN",
+    [TOK_EOF] = "EOF",
 };
 
 char const *token_kind_str_repr(token_kind_t kind)
@@ -169,15 +172,17 @@ char const *token_kind_category(token_kind_t kind)
         case TOK_SLASH:
         case TOK_PERCENT:
         case TOK_SLASH_SLASH:
+        case TOK_CARET:
             return "ARITH_OP";
         case TOK_EQ:
-            return "ASSIGN_OP";
         case TOK_PLUS_EQ:
         case TOK_MINUS_EQ:
         case TOK_STAR_EQ:
         case TOK_SLASH_EQ:
         case TOK_SLASH_SLASH_EQ:
-            return "RESERVED_OP";
+            return "ASSIGN_OP";
+        case TOK_NW_LET:
+            return "NOISE_WORD";
         case TOK_EQ_EQ:
         case TOK_BANG_EQ:
         case TOK_LT:

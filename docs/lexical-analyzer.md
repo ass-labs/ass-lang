@@ -32,9 +32,9 @@ ROW:COL    CATEGORY       KIND             LEXEME
 ```
 
 - **CATEGORY** (new) groups each token by lexical class: `IDENTIFIER`,
-  `KEYWORD`, `RESERVED_WORD`, `CONSTANT`, `ARITH_OP`, `RELATIONAL_OP`,
-  `LOGICAL_OP`, `ASSIGN_OP`, `RESERVED_OP`, `DELIMITER`, `BRACKET`, `COMMENT`
-  or `INVALID`.
+  `KEYWORD`, `RESERVED_WORD`, `NOISE_WORD`, `CONSTANT`, `ARITH_OP`,
+  `RELATIONAL_OP`, `LOGICAL_OP`, `ASSIGN_OP`, `DELIMITER`, `BRACKET`,
+  `COMMENT` or `INVALID`.
 - Newlines, carriage returns and tabs inside a lexeme are written as `\n`,
   `\r` and `\t`. This keeps multi-line comments on a single row.
 
@@ -68,7 +68,7 @@ meaning yet.
 | --- | --- | --- |
 | `wnum8` `wnum16` `wnum32` `wnum64` | `RW_WNUM8` … `RW_WNUM64` | Explicit integer bit widths |
 | `dnum8` `dnum16` `dnum32` `dnum64` | `RW_DNUM8` … `RW_DNUM64` | Explicit double bit widths |
-| `auto` / `let` | `RW_AUTO` / `RW_LET` | Automatic type deduction |
+| `auto` | `RW_AUTO` | Automatic type deduction |
 | `str` | `RW_STR` | String type |
 
 Unlisted widths such as `wnum7` and `wnum128` are ordinary identifiers.
@@ -98,11 +98,14 @@ The supported escapes are `\n`, `\t`, `\r`, `\0`, `\\`, `\'` and `\"`.
 
 | Group | Lexemes | Kinds |
 | --- | --- | --- |
-| Arithmetic | `+` `-` `*` `/` `%` `//` | `PLUS` `MINUS` `STAR` `SLASH` `PERCENT` `SLASH_SLASH` |
+| Arithmetic | `+` `-` `*` `/` `%` `//` `^` | `PLUS` `MINUS` `STAR` `SLASH` `PERCENT` `SLASH_SLASH` `CARET` |
 | Assignment *(new)* | `=` | `EQ` |
 | Relational *(new)* | `==` `!=` `<` `>` `<=` `>=` | `EQ_EQ` `BANG_EQ` `LT` `GT` `LT_EQ` `GT_EQ` |
 | Logical | `AND` `OR` `NOT` | `KW_AND` `KW_OR` `KW_NOT` |
-| Reserved compound assignment *(new)* | `+=` `-=` `*=` `/=` `//=` | `PLUS_EQ` `MINUS_EQ` `STAR_EQ` `SLASH_EQ` `SLASH_SLASH_EQ` |
+| Compound assignment *(new)* | `+=` `-=` `*=` `/=` `//=` | `PLUS_EQ` `MINUS_EQ` `STAR_EQ` `SLASH_EQ` `SLASH_SLASH_EQ` |
+
+`^` (power) and the compound assignments are in category `ARITH_OP` and
+`ASSIGN_OP`, and are supported by the parser.
 
 `//` was declared before this change but never lexed. It now works.
 
@@ -152,7 +155,7 @@ Any lexeme that matches no rule becomes an `UNKNOWN` token with category
 
 | Input | Reason |
 | --- | --- |
-| `@` `#` `` ` `` `~` `?` `:` `\` `^` `&` `\|` `!` `$` | unrecognized character |
+| `@` `#` `` ` `` `~` `?` `:` `\` `&` `\|` `!` `$` | unrecognized character |
 | `123variable` | identifiers cannot start with a digit |
 | `"no closing quote` | unterminated or malformed string literal |
 | `'ab'` | unterminated or malformed character literal |
@@ -160,7 +163,12 @@ Any lexeme that matches no rule becomes an `UNKNOWN` token with category
 
 ### Noise words
 
-The proposal defines no noise words, so the lexer doesn't recognize any.
+| Lexeme | Kind | Category |
+| --- | --- | --- |
+| `let` | `NW_LET` | `NOISE_WORD` |
+
+`let` may start a declaration for readability (`let wnum x = 1`) and has no
+other meaning.
 
 ## Implementation notes
 

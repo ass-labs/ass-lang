@@ -22,11 +22,12 @@ typedef enum : uint8_t
     TOK_SLASH,       // /
     TOK_PERCENT,     // %
     TOK_SLASH_SLASH, // // - Floor division
+    TOK_CARET,       // ^ - Power
 
     // Assignment operators
     TOK_EQ, // =
 
-    // Reserved compound assignment operators, lexed but not yet implemented
+    // Compound assignment operators
     TOK_PLUS_EQ,        // +=
     TOK_MINUS_EQ,       // -=
     TOK_STAR_EQ,        // *=
@@ -41,7 +42,8 @@ typedef enum : uint8_t
     TOK_LT_EQ,   // <=
     TOK_GT_EQ,   // >=
 
-    TOK_NW_LET,
+    // Noise words
+    TOK_NW_LET, // let
 
     // Keywords
     ____tok_kw_start,
@@ -103,6 +105,7 @@ typedef enum : uint8_t
     // Special
     TOK_WHITESPACE, // Skipped by the lexer, never emitted
     TOK_UNKNOWN,    // Lexical error
+    TOK_EOF,        // End of input, appended by the parser, never by the lexer
 
     ____tok_count,
 } token_kind_t;

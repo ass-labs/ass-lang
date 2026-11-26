@@ -3,12 +3,13 @@
 
 #include "ast/stmt.h"
 
-typedef struct
+typedef struct block_t
 {
     vec(stmt_t) stmts;
 } block_t;
 
-void block_init(block_t *block);
+block_t *block_new(void);
+/// Frees the statements of `block` and `block` itself. Accepts `NULL`.
 void block_free(block_t *block);
 
 #endif

@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <time.h>
 
+#include "ast/print.h"
 #include "ast/program.h"
 #include "config.h"
 #include "core/string/slice.h"
@@ -25,6 +26,9 @@
 #endif
 
 #define SYM_TABLE_EXT ".sym"
+#define LEFTMOST_EXT ".leftmost"
+#define RIGHTMOST_EXT ".rightmost"
+#define AST_EXT ".ast"
 
 static bool is_regular_file(const char *path)
 {
@@ -148,21 +152,30 @@ static void write_sym_table(FILE *out, lexer_t const *lexer)
     });
 }
 
+/// Opens `<source file><ext>` for writing, storing its path in `out_path`
+/// (which must be initialized).
+static FILE *open_output(program_t const *program, char const *ext,
+                         string_t *out_path)
+{
+    size_t size = program->file_path.len + strlen(ext) + 1;
+
+    string_init_wcap(out_path, size);
+    snprintf(out_path->data, size, "%s%s", program->file_path.data, ext);
+    out_path->len = size - 1;
+
+    FILE *out = fopen(out_path->data, "w");
+    if (out == NULL)
+        panic("failed to write output file: %s", out_path->data);
+
+    return out;
+}
+
 static void program_output_sym_table(program_t *program, lexer_t const *lexer)
 {
     if (CONFIG.out_conf & OCONF_GEN_SYM_TABLE)
     {
-        size_t size = program->file_path.len + sizeof(SYM_TABLE_EXT);
-
         drop(string_free) string_t out_path;
-        string_init_wcap(&out_path, size);
-        snprintf(out_path.data, size, "%s" SYM_TABLE_EXT,
-                 program->file_path.data);
-        out_path.len = size - 1;
-
-        FILE *out = fopen(out_path.data, "w");
-        if (out == NULL)
-            panic("failed to write symbol table file: %s", out_path.data);
+        FILE *out = open_output(program, SYM_TABLE_EXT, &out_path);
 
         write_sym_table(out, lexer);
         fclose(out);
@@ -172,6 +185,37 @@ static void program_output_sym_table(program_t *program, lexer_t const *lexer)
 
     if (CONFIG.out_conf & OCONF_LOG_SYM_TABLE)
         write_sym_table(stdout, lexer);
+}
+
+static void program_output_derivation(program_t *program, pt_node_t const *root,
+                                      bool rightmost)
+{
+    if (root == NULL || !(CONFIG.out_conf & OCONF_GEN_DERIVATIONS))
+        return;
+
+    drop(string_free) string_t out_path;
+    FILE *out = open_output(
+        program, rightmost ? RIGHTMOST_EXT : LEFTMOST_EXT, &out_path);
+
+    pt_write_derivation(out, root, rightmost);
+    fclose(out);
+
+    dprintln("%s derivation written to '%s'",
+             rightmost ? "rightmost" : "leftmost", out_path.data);
+}
+
+static void program_output_ast(program_t *program, program_node_t const *ast)
+{
+    if (!(CONFIG.out_conf & OCONF_GEN_AST))
+        return;
+
+    drop(string_free) string_t out_path;
+    FILE *out = open_output(program, AST_EXT, &out_path);
+
+    ast_write(out, ast);
+    fclose(out);
+
+    dprintln("AST written to '%s'", out_path.data);
 }
 
 bool program_run(program_t *program)
@@ -190,13 +234,23 @@ bool program_run(program_t *program)
 
     program_output_sym_table(program, &lexer);
 
-    // Syntactic Analysis
-    drop(parser_free) parser_t parser;
-    parser_new(&parser);
+    // Syntactic Analysis, skipped after lexical errors since the parsers
+    // would only report them again as unexpected tokens.
+    bool ok = lexer.err_count == 0;
+    if (ok)
+    {
+        drop(parser_free) parser_t parser;
+        parser_new(&parser, &lexer);
 
-    program_node_t pnode;
-    program_node_init(&pnode);
-    parser_parse(&parser, &pnode);
+        drop(program_node_free) program_node_t ast;
+        program_node_init(&ast);
+
+        ok = parser_parse(&parser, &ast);
+        program_output_derivation(program, parser.ll_tree.root, false);
+        program_output_derivation(program, parser.lr_tree.root, true);
+        if (ok)
+            program_output_ast(program, &ast);
+    }
 
     clock_gettime(CLOCK_MONOTONIC, &end);
     long elapsed_ns = (end.tv_sec - start.tv_sec) * 1000000000L +
@@ -204,5 +258,5 @@ bool program_run(program_t *program)
          elapsed_mus = elapsed_ns / 1000;
     dprintln("time elapsed: %ld ns, %ld μs", elapsed_ns, elapsed_mus);
 
-    return lexer.err_count == 0;
+    return ok;
 }

@@ -8,3 +8,8 @@
 
 # Generated symbol tables
 *.sym
+
+# Generated derivations and ASTs
+*.leftmost
+*.rightmost
+*.ast
