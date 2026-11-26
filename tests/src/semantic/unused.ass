@@ -1,0 +1,16 @@
+$$ Unused variables.
+wnum never_used
+wnum only_assigned = 1
+only_assigned = 2
+wnum _ignored = 3
+wnum counter = 0
+counter += 1
+wnum read_in
+read(read_in)
+wnum used = 4
+write(used)
+
+while (used > 0) {
+    bool inner = True
+    used = used - 1
+}

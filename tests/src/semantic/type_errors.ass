@@ -1,0 +1,33 @@
+$$ Type checking: every statement below has a type error.
+wnum w = 1
+dnum d = 2.5
+bool b = True
+char c = 'a'
+
+wnum w2 = 1.5
+wnum w3 = w / 2
+char c2 = 65
+bool b2 = "yes"
+dnum d2 = w + d
+
+w = b
+w /= 2
+w += d
+b += 1
+c = c + 1
+
+if (w) {
+    write("w is not a bool")
+}
+while (w + 1) {
+    w = w - 1
+}
+
+b = NOT w
+b = w AND b
+b = c < w
+b = c == 'b'
+b = w == d
+b = "a" == "a"
+w = -b
+write(w, d, b, c, w2, w3, c2, b2, d2)

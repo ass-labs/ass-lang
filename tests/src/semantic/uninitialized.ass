@@ -1,0 +1,41 @@
+$$ Use of uninitialized variables.
+wnum a
+write(a)
+write(a)
+
+wnum b
+b += 1
+
+wnum c
+bool flag = True
+if (flag) {
+    c = 1
+}
+write(c)
+
+wnum d
+if (flag) {
+    d = 1
+} else {
+    d = 2
+}
+write(d)
+
+wnum e
+read(e)
+write(e)
+
+wnum f
+bool first = True
+while (flag) {
+    if (first == False) {
+        write(f)
+    }
+    f = 1
+    first = False
+}
+
+wnum g
+while (flag) {
+    write(g)
+}

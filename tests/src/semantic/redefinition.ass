@@ -1,0 +1,13 @@
+$$ Redefinition and undeclared variables.
+wnum x = 1
+dnum x = 2.0
+wnum a = 1, a = 2
+
+if (x > 0) {
+    wnum x = 5
+    write(x)
+}
+
+y = 3
+read(z)
+write(x, a, q)

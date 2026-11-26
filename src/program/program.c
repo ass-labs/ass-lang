@@ -12,6 +12,7 @@
 #include "core/string/string.h"
 #include "lexical/analyzer.h"
 #include "program/program.h"
+#include "semantic/analyzer.h"
 #include "syntax/analyzer.h"
 #include "utils/control.h"
 #include "utils/drop.h"
@@ -250,6 +251,14 @@ bool program_run(program_t *program)
         program_output_derivation(program, parser.lr_tree.root, true);
         if (ok)
             program_output_ast(program, &ast);
+
+        // Semantic Analysis, on the AST of a program without syntax errors.
+        if (ok)
+        {
+            drop(sema_free) sema_t sema;
+            sema_new(&sema, program->file_path.data);
+            ok = sema_analyze(&sema, &ast);
+        }
     }
 
     clock_gettime(CLOCK_MONOTONIC, &end);

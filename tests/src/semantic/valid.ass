@@ -1,0 +1,20 @@
+$$ A valid program: no errors and no warnings.
+let wnum n
+read(n)
+
+dnum total = 0
+wnum i = 0
+while (i < n) {
+    total += i / 2
+    i = i + 1
+}
+
+dnum average = total / 2
+bool big = average >= 10.5 AND NOT (n == 0)
+char grade = 'A'
+if (big) {
+    grade = 'B'
+} else if (n // 2 == 0) {
+    grade = 'C'
+}
+write("total:", total, "big:", big, "grade:", grade)
